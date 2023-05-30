@@ -10,6 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 import static com.study.jpa.chap01.entity.Product.Category.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,6 +77,50 @@ class ProductRepositoryTest {
         productRepository.deleteById(id);
         //then
 
+    }
+
+    @Test
+    @DisplayName("전체조회")
+    void testSelectAll() {
+        //given
+        List<Product> productList = productRepository.findAll();
+        //when
+        System.out.println("productList = " + productList);
+        //then
+    }
+
+    @Test
+    @DisplayName("개별 조회")
+    void testFindOnen() {
+        //given
+        long id = 3L;
+        //when
+        Optional<Product> product = productRepository.findById(id);
+        //then
+        product.ifPresent(product1 -> {
+            product1.getId();
+        });
+    }
+
+    @Test
+    @DisplayName("상품의 이름과 가격을 변경해야한다")
+    void testModify() {
+        //given
+        long id = 2L;
+        String newName = "볶음밥";
+        int newPrice = 5000;
+        //when
+        // jpa에서 update는 따로 메서드를 지원하지 않고
+        // 조회한 후 setter로 변경하면 자동으로 update문이 나간다
+        // 변경 후 다시 save를 호출해야한다
+        Optional<Product> product = productRepository.findById(id);
+        product.ifPresent(p ->{
+            p.setName(newName);
+            p.setPrice(newPrice);
+
+            productRepository.save(p);
+        });
+        //then
     }
 
 }
