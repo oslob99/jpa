@@ -91,5 +91,16 @@ class StudentRepositoryTest {
         System.out.println("students = " + students);
     }
 
+    @Test
+    @DisplayName("삭제")
+    void testDeleteByName() {
+        //given
+        String name = "대길이";
+        //when
+        studentRepository.deleteByNameWithJPQL(name);
+        //then
+        List<Student> byName = studentRepository.findByName(name);
+        System.out.println("byName = " + byName);
+    }
 
 }
