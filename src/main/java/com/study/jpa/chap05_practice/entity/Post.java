@@ -27,6 +27,9 @@ public class Post {
     @Column(nullable = false)
     private String writer; // 작성자
 
+    @Column(nullable = false)
+    private String title; // 제목
+
     private String content; // 내용
 
     @CreationTimestamp
@@ -37,6 +40,15 @@ public class Post {
     private LocalDateTime updateDate; // 수정시간
 
     @OneToMany(mappedBy = "post")
+    @Builder.Default
     private List<HashTag> hashTags = new ArrayList<>();
     // 반드시 초기화 해줄 것!
+
+    // 양방향 매핑에서 리스트쪽에 데이터를 추가하는 편의메서드 생성
+    public  void addHashTag(HashTag hashTag){
+        hashTags.add(hashTag);
+        if (this !=  hashTag.getPost()) {
+            hashTag.setPost(this);
+        }
+    }
 }
